@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>HTML5 MediaElement</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <script type="text/javascript">
+        function init()// Master function, encapsulates all functions 
+		{        
+            var video = document.getElementById("Video1");                                               
+            if (video.canPlayType) 
+			{   // tests that we have HTML5 video support
+                // if successful, display buttons and set up events
+                document.getElementById("buttonbar").style.display = "block";                
+                document.getElementById("inputField").style.display = "block";
+
+                // helper functions
+                //  play video
+                function vidplay(evt) 
+				{
+                    if (video.src == "")// inital source load 
+					{  
+                        getVideo();
+                    }
+                    button = evt.target; //  get the button id to swap the text based on the state                                    
+                    if (video.paused)// play the file, and display pause symbol 
+					{   
+                        video.play();
+                        button.textContent = "||";
+                    } 
+					else// pause the file, and display play symbol 
+					{               
+                        video.pause();
+                        button.textContent = ">";
+                    }
+                }
+                //  load video file from input field
+                function getVideo() 
+				{
+                    var fileURL = document.getElementById("videoFile").value;  // get input field                    
+                    if (fileURL != "") 
+					{
+                        video.src = fileURL;
+                        video.load();  // if HTML source element is used
+                        document.getElementById("play").click();  // start play
+                    } 
+					else 
+					{
+                        errMessage("Enter a valid video URL");  // fail silently
+                    }
+                }
+
+
+
+                //  button helper functions 
+                //  skip forward, backward, or restart
+                function setTime(tValue) 
+				{
+                //  if no video is loaded, this throws an exception 
+                    try {
+                        if (tValue == 0) {
+                            video.currentTime = tValue;
+                        }
+                        else {
+                            video.currentTime += tValue;
+                        }
+                        
+                     } catch (err) {
+                         // errMessage(err) // show exception
+                     errMessage("Video content might not be loaded");
+                       }
+             }
+                //  display an error message 
+                function errMessage(msg) {
+                // displays an error message for 5 seconds then clears it
+                    document.getElementById("errorMsg").textContent = msg;
+                    setTimeout("document.getElementById('errorMsg').textContent=''", 5000);
+                }
+                // change volume based on incoming value 
+                function setVol(value) {
+                    var vol = video.volume;
+                    vol += value;
+                    //  test for range 0 - 1 to avoid exceptions
+                    if (vol >= 0 && vol <= 1) {
+                        // if valid value, use it
+                        video.volume = vol;
+                    } else {
+                        // otherwise substitute a 0 or 1
+                        video.volume = (vol < 0) ? 0 : 1;                        
+                    }
+                }
+                //  button events               
+                //  Play
+                document.getElementById("play").addEventListener("click", vidplay, false);
+                //  Restart
+                document.getElementById("restart").addEventListener("click", function () {
+                    setTime(0);
+                }, false);
+                //  Skip backward 10 seconds
+                document.getElementById("rew").addEventListener("click", function () {
+                    setTime(-10);
+                }, false);
+                //  Skip forward 10 seconds
+                document.getElementById("fwd").addEventListener("click", function () {
+                    setTime(10);
+                }, false);
+                //  set src == latest video file URL
+                document.getElementById("loadVideo").addEventListener("click", getVideo, false);
+
+                // fail with message 
+                video.addEventListener("error", function (err) {
+                    errMessage(err);
+                }, true);
+                // volume buttons
+                document.getElementById("volDn").addEventListener("click", function () {
+                    setVol(-.1); // down by 10%
+                }, false);
+                document.getElementById("volUp").addEventListener("click", function () {
+                    setVol(.1);  // up by 10%
+                }, false);
+
+                // playback speed buttons
+                document.getElementById("slower").addEventListener("click", function () {
+                    video.playbackRate -= .25;
+                }, false);
+                document.getElementById("faster").addEventListener("click", function () {
+                    video.playbackRate += .25;
+                }, false);
+                document.getElementById("normal").addEventListener("click", function () {
+                    video.playbackRate = 1;
+                }, false);
+                document.getElementById("mute").addEventListener("click", function (evt) {
+                    if (video.muted) {
+                        video.muted = false;
+                        evt.target.innerHTML = "<img alt='volume on button' src='vol2.png' />"
+                    } else {
+                        video.muted = true;
+                        evt.target.innerHTML = "<img alt='volume off button' src='mute2.png' />"
+                    }
+                }, false);
+            } // end of runtime
+        }// end of master         
+    </script>
+    
+    </head>
+    <body onload="init();" >        
+			<video id="Video1" controls style="border: 1px solid blue;" height="540px" width="960px" title="video element"> 
+				<source src="other1.mp4" type="video/mp4">
+			</video>
+    
+    <div id="buttonbar" style="display: none;")>
+        <button id="restart" title="Restart button">[]</button> 
+        <button id="slower" title="Slower playback button">-</button> 
+        <button id="rew" title="Rewind button" >&lt;&lt;</button>
+        <button id="play" title="Play button">&gt;</button>
+        <button id="fwd" title="Forward button" >&gt;&gt;</button>
+        <button id="faster" title="Faster playback button">+</button>
+        <button id="Button2" title="Mute button" ><img alt="Volume on button" src="vol2.png" /></button>     
+        <br />
+        <label>Playback </label>
+            <label>Reset playback rate: </label><button id="normal" title="Reset playback rate button">=</button>    
+        
+        <label>  Volume </label>
+            <button id="volDn"  title="Volume down button">-</button>
+            <button id="volUp"  title="Volume up button">+</button>
+            <button id="mute" title="Mute button" ><img alt="Volume on button" src="vol2.png" /></button>        
+    </div>   
+    <br/>  
+    <div id= "inputField" style="display:none;" >
+        <label>Type or paste a video URL: <br/>
+        <input type="text" id="videoFile" style="width: 300px;"  title="video file input field" value="http://ie.microsoft.com/testdrive/ieblog/2011/nov/pp4_blog_demo.mp4" />        
+        <button id="loadVideo" title="Load video button" >Load</button>
+        </label>
+    </div>
+    <div title="Error message area" id="errorMsg" style="color:Red;"></div>  
+    </body>
+</html>

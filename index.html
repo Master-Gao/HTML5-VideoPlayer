@@ -44,8 +44,8 @@
 				<span style="font-size:47px; color:#FFFFFF; line-height:50px;">X</span>
 			</div>
 			<!--字幕div-->
-			<div style="margin:0 8px; width:50px; height:50px; text-align:center; float:right; display:block; cursor:pointer;">
-				<div style="margin:14px 0px; padding:0 10px; font-size:12px; color:#cccccc; background-color:#555555; height:22px; line-height:22px; border-radius:4px; outline:none; display:block; cursor:pointer; text-align:center;" onMouseOver="showVideoSubtitle()" onMouseOut="hideVideoSubtitle()">字幕</div>
+			<div style="margin:0 8px; width:50px; height:50px; text-align:center; float:right; display:block; cursor:pointer;" onMouseOver="showVideoSubtitle()" onMouseOut="hideVideoSubtitle()">
+				<div style="margin:14px 0px; padding:0 10px; font-size:12px; color:#cccccc; background-color:#555555; height:22px; line-height:22px; border-radius:4px; outline:none; display:block; cursor:pointer; text-align:center;">字幕</div>
 				<ul id="video_subtitle_opt" style="width:11px; display:none; bottom:40px; border-radius:4px; background-color:#000000; opacity:0.7; color:#999999; position:relative; top:-96px; left:0px;">
 					<li type="中文" style="width:49px; margin:6px auto; padding:0px; 4px; height:20px; background-color:rgba(34,34,34,0.9); border:1px solid #1b1b1b; border-radius:4px; box-shadow:0 1px 0 0px #666; color:#fff; clear:none; list-style:none; outline:none; display:list-item; position:relative; top:26px; left:-40px; font-size:13px; cursor:pointer;">
 						<span style="color:#84b803; line-height:22px;">•</span>中文
@@ -56,28 +56,51 @@
 				</ul>
 			</div>
 			<!--分辨率div-->
-			<div style="margin:0 8px; width:50px; height:50px; text-align:center; float:right; display:block; cursor:pointer;">
-				<div style="margin:14px 0px; padding:0 10px; font-size:12px; color:#cccccc; background-color:#555555; height:22px; line-height:22px; border-radius:4px; outline:none; display:block; cursor:pointer; text-align:center;" onMouseOver="showVideoResolution()" onMouseOut="hideVideoResolution()">超清</div>
+			<div style="margin:0 8px; width:50px; height:50px; text-align:center; float:right; display:block; cursor:pointer;" onMouseOver="showVideoResolution()" onMouseOut="hideVideoResolution()">
+				<div id="video_resolution_content" style="margin:14px 0px; padding:0 10px; font-size:12px; color:#cccccc; background-color:#555555; height:22px; line-height:22px; border-radius:4px; outline:none; display:block; cursor:pointer; text-align:center;">超清</div>
 				<ul id="video_resolution_opt" style="width:11px; display:none; bottom:40px; border-radius:4px; background-color:#000000; opacity:0.7; color:#999999; position:relative; top:-96px; left:0px;">
-					<li type="中文" style="width:49px; margin:6px auto; padding:0px; 4px; height:20px; background-color:rgba(34,34,34,0.9); border:1px solid #1b1b1b; border-radius:4px; box-shadow:0 1px 0 0px #666; color:#fff; clear:none; list-style:none; outline:none; display:list-item; position:relative; top:26px; left:-40px; font-size:13px; cursor:pointer;">
+					<li id="video_resolution_standard" type="中文" style="width:49px; margin:6px auto; padding:0px; 4px; height:20px; background-color:rgba(34,34,34,0.9); border:1px solid #1b1b1b; border-radius:4px; box-shadow:0 1px 0 0px #666; color:#fff; clear:none; list-style:none; outline:none; display:list-item; position:relative; top:26px; left:-40px; font-size:13px; cursor:pointer;" onClick="changeResolution(this.id)">
+						<span style="color:#84b803; line-height:22px;">•</span>标清
+					</li>
+					<li id="video_resolution_high" type="中文" style="width:49px; margin:6px auto; padding:0px; 4px; height:20px; background-color:rgba(34,34,34,0.9); border:1px solid #1b1b1b; border-radius:4px; box-shadow:0 1px 0 0px #666; color:#fff; clear:none; list-style:none; outline:none; display:list-item; position:relative; top:-26px; left:-40px; font-size:13px; cursor:pointer;" onClick="changeResolution(this.id)">
 						<span style="color:#84b803; line-height:22px;">•</span>高清
 					</li>
-					<li type="中文" style="width:49px; margin:6px auto; padding:0px; 4px; height:20px; background-color:rgba(34,34,34,0.9); border:1px solid #1b1b1b; border-radius:4px; box-shadow:0 1px 0 0px #666; color:#fff; clear:none; list-style:none; outline:none; display:list-item; position:relative; top:-25px; left:-40px; font-size:13px; cursor:pointer;">
-						<span style="color:#84b803; line-height:22px;">•</span>标清
+					<li id="video_resolution_super" type="中文" style="width:49px; margin:6px auto; padding:0px; 4px; height:20px; background-color:rgba(34,34,34,0.9); border:1px solid #1b1b1b; border-radius:4px; box-shadow:0 1px 0 0px #666; color:#fff; clear:none; list-style:none; outline:none; display:list-item; position:relative; top:-78px; left:-40px; font-size:13px; cursor:pointer;" onClick="changeResolution(this.id)">
+						<span style="color:#84b803; line-height:22px;">•</span>超清
 					</li>
 				</ul>
 			</div>
 			<!--播放速度div-->
-			<div style="margin:0 8px; width:60px; height:50px; text-align:center; float:right; display:block; cursor:pointer;">
-				<div style="margin:14px 0px; padding:0 10px; font-size:12px; color:#cccccc; background-color:#555555; height:22px; line-height:22px; border-radius:4px; outline:none; display:block; cursor:pointer; text-align:center;" onMouseOver="showVideoSpeed()" onMouseOut="hideVideoSpeed()">1X</div>
+			<div style="margin:0 8px; width:60px; height:50px; text-align:center; float:right; display:block; cursor:pointer;" onMouseOver="showVideoSpeed()" onMouseOut="hideVideoSpeed()">
+				<div id="video_speed_content" style="margin:14px 0px; padding:0 10px; font-size:12px; color:#cccccc; background-color:#555555; height:22px; line-height:22px; border-radius:4px; outline:none; display:block; cursor:pointer; text-align:center;">1X</div>
 				<ul id="video_speed_opt" style="width:19px; display:none; bottom:40px; border-radius:4px; background-color:#000000; opacity:0.7; color:#999999; position:relative; top:-96px; left:0px;">
-					<li type="中文" style="width:57px; margin:6px auto; padding:0px; 4px; height:20px; background-color:rgba(34,34,34,0.9); border:1px solid #1b1b1b; border-radius:4px; box-shadow:0 1px 0 0px #666; color:#fff; clear:none; list-style:none; outline:none; display:list-item; position:relative; top:26px; left:-40px; font-size:13px; cursor:pointer;">
-						<span style="color:#84b803; line-height:22px;">•</span>2倍速
-					</li>
-					<li type="中文" style="width:57px; margin:6px auto; padding:0px; 4px; height:20px; background-color:rgba(34,34,34,0.9); border:1px solid #1b1b1b; border-radius:4px; box-shadow:0 1px 0 0px #666; color:#fff; clear:none; list-style:none; outline:none; display:list-item; position:relative; top:-28px; left:-40px; font-size:13px; cursor:pointer;">
+					<li id="first_speed" type="中文" style="width:57px; margin:6px auto; padding:0px; 4px; height:20px; background-color:rgba(34,34,34,0.9); border:1px solid #1b1b1b; border-radius:4px; box-shadow:0 1px 0 0px #666; color:#fff; clear:none; list-style:none; outline:none; display:list-item; position:relative; top:26px; left:-40px; font-size:13px; cursor:pointer;" onClick="changeSpeed(this.id)">
 						<span style="color:#84b803; line-height:22px;">•</span>0.5倍速
 					</li>
+					<li id="second_speed" type="中文" style="width:57px; margin:6px auto; padding:0px; 4px; height:20px; background-color:rgba(34,34,34,0.9); border:1px solid #1b1b1b; border-radius:4px; box-shadow:0 1px 0 0px #666; color:#fff; clear:none; list-style:none; outline:none; display:list-item; position:relative; top:-26px; left:-40px; font-size:13px; cursor:pointer;" onClick="changeSpeed(this.id)">
+						<span style="color:#84b803; line-height:22px;">•</span>1倍速
+					</li>
+					<li id="third_speed" type="中文" style="width:57px; margin:6px auto; padding:0px; 4px; height:20px; background-color:rgba(34,34,34,0.9); border:1px solid #1b1b1b; border-radius:4px; box-shadow:0 1px 0 0px #666; color:#fff; clear:none; list-style:none; outline:none; display:list-item; position:relative; top:-78px; left:-40px; font-size:13px; cursor:pointer;" onClick="changeSpeed(this.id)">
+						<span style="color:#84b803; line-height:22px;">•</span>2倍速
+					</li>
 				</ul>
+			</div>
+			<!--音量按钮及音量长度条-->
+			<div style="margin:0 auto; width:24px; height:48px; cursor:pointer; float:right; line-height:48px;">
+				<!--音量按钮-->
+				<div style="font-size:24px; color:#c6c6c7; width:24px; border:1px solid white;">↑</div>
+				<!--音量长度条-->
+				<div>
+				</div>
+			</div>
+			<!--播放时间进度条-->
+			<div style="width:960px; height:6px; position:absolute; top:44px; left:0px; background-color:#555555; display:block;">
+				<!--已经播放时间进度条-->
+				<div style="width:45px; height:6px; position:absolute; top:0; left:0; background-color:#8ec800; display:block;">
+				</div>
+				<!--当前时间进度坐标点-->
+				<div style="width:8px; height:8px; bottom:-3px; border:2px solid #a2a2a2; border-radius:8px; position:absolute; top:-4px; left:44px; background-color:#ffffff; display:block;">
+				</div>
 			</div>
 		</div>
 	</div>
@@ -132,7 +155,12 @@
 		/*全屏*/
 		var videoFullScreen=function(){
 			var video_div=document.getElementById("video_div");
-			video.webkitRequestFullScreen();
+			if(!document.webkitIsFullScreen){
+				video.webkitRequestFullScreen();
+			}
+			else{
+				document.webkitCancelFullScreen();
+			}
 		}
 		/*显示各种字幕的选择项*/
 		var showVideoSubtitle=function(){
@@ -163,6 +191,38 @@
 		var hideVideoSpeed=function(){
 			var video_speed_opt=document.getElementById("video_speed_opt");
 			video_speed_opt.style.display="none";
+		}
+		/*切换视频分辨率*/
+		var changeResolution=function(id){
+			var video_resolution_content= document.getElementById("video_resolution_content");
+			var vTime = video.currentTime;//视频当前播放时间秒数
+			if(id == "video_resolution_super"){
+				video_resolution_content.innerHTML="超清";
+				video.src="videos/other1.mp4";
+				video.currentTime=vTime;
+			}else if( id == "video_resolution_high"){
+				video_resolution_content.innerHTML="高清";
+				video.src="videos/other2.mp4";
+				video.currentTime=vTime;
+			}else if(id == "video_resolution_standard"){
+				video_resolution_content.innerHTML="标清";
+				video.src="videos/other3.mp4";
+				video.currentTime=vTime;
+			}
+		}
+		/*切换视频播放速度*/
+		var changeSpeed=function(id){
+			var video_speed_content=document.getElementById("video_speed_content");
+			if(id == "first_speed"){
+				video_speed_content.innerHTML="0.5X";
+				video.playbackRate = 0.5;
+			}else if(id == "second_speed"){
+				video_speed_content.innerHTML="1X";
+				video.playbackRate = 1;
+			}else if(id == "third_speed"){
+				video_speed_content.innerHTML="2X";
+				video.playbackRate = 2;
+			}
 		}
 	</script>
 </body>
