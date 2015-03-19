@@ -1,177 +1,169 @@
+<!--
+	代码命名风格:
+		标识符：小写字母+下划线
+		方法名称：首单词小写+后面单词首字母大写
+-->
 <!DOCTYPE html>
 <html>
 <head>
-	<title>HTML5 MediaElement</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <script type="text/javascript">
-        function init()// Master function, encapsulates all functions 
-		{        
-            var video = document.getElementById("Video1");                                               
-            if (video.canPlayType) 
-			{   // tests that we have HTML5 video support
-                // if successful, display buttons and set up events
-                document.getElementById("buttonbar").style.display = "block";                
-                document.getElementById("inputField").style.display = "block";
-
-                // helper functions
-                //  play video
-                function vidplay(evt) 
-				{
-                    if (video.src == "")// inital source load 
-					{  
-                        getVideo();
-                    }
-                    button = evt.target; //  get the button id to swap the text based on the state                                    
-                    if (video.paused)// play the file, and display pause symbol 
-					{   
-                        video.play();
-                        button.textContent = "||";
-                    } 
-					else// pause the file, and display play symbol 
-					{               
-                        video.pause();
-                        button.textContent = ">";
-                    }
-                }
-                //  load video file from input field
-                function getVideo() 
-				{
-                    var fileURL = document.getElementById("videoFile").value;  // get input field                    
-                    if (fileURL != "") 
-					{
-                        video.src = fileURL;
-                        video.load();  // if HTML source element is used
-                        document.getElementById("play").click();  // start play
-                    } 
-					else 
-					{
-                        errMessage("Enter a valid video URL");  // fail silently
-                    }
-                }
-
-
-
-                //  button helper functions 
-                //  skip forward, backward, or restart
-                function setTime(tValue) 
-				{
-                //  if no video is loaded, this throws an exception 
-                    try {
-                        if (tValue == 0) {
-                            video.currentTime = tValue;
-                        }
-                        else {
-                            video.currentTime += tValue;
-                        }
-                        
-                     } catch (err) {
-                         // errMessage(err) // show exception
-                     errMessage("Video content might not be loaded");
-                       }
-             }
-                //  display an error message 
-                function errMessage(msg) {
-                // displays an error message for 5 seconds then clears it
-                    document.getElementById("errorMsg").textContent = msg;
-                    setTimeout("document.getElementById('errorMsg').textContent=''", 5000);
-                }
-                // change volume based on incoming value 
-                function setVol(value) {
-                    var vol = video.volume;
-                    vol += value;
-                    //  test for range 0 - 1 to avoid exceptions
-                    if (vol >= 0 && vol <= 1) {
-                        // if valid value, use it
-                        video.volume = vol;
-                    } else {
-                        // otherwise substitute a 0 or 1
-                        video.volume = (vol < 0) ? 0 : 1;                        
-                    }
-                }
-                //  button events               
-                //  Play
-                document.getElementById("play").addEventListener("click", vidplay, false);
-                //  Restart
-                document.getElementById("restart").addEventListener("click", function () {
-                    setTime(0);
-                }, false);
-                //  Skip backward 10 seconds
-                document.getElementById("rew").addEventListener("click", function () {
-                    setTime(-10);
-                }, false);
-                //  Skip forward 10 seconds
-                document.getElementById("fwd").addEventListener("click", function () {
-                    setTime(10);
-                }, false);
-                //  set src == latest video file URL
-                document.getElementById("loadVideo").addEventListener("click", getVideo, false);
-
-                // fail with message 
-                video.addEventListener("error", function (err) {
-                    errMessage(err);
-                }, true);
-                // volume buttons
-                document.getElementById("volDn").addEventListener("click", function () {
-                    setVol(-.1); // down by 10%
-                }, false);
-                document.getElementById("volUp").addEventListener("click", function () {
-                    setVol(.1);  // up by 10%
-                }, false);
-
-                // playback speed buttons
-                document.getElementById("slower").addEventListener("click", function () {
-                    video.playbackRate -= .25;
-                }, false);
-                document.getElementById("faster").addEventListener("click", function () {
-                    video.playbackRate += .25;
-                }, false);
-                document.getElementById("normal").addEventListener("click", function () {
-                    video.playbackRate = 1;
-                }, false);
-                document.getElementById("mute").addEventListener("click", function (evt) {
-                    if (video.muted) {
-                        video.muted = false;
-                        evt.target.innerHTML = "<img alt='volume on button' src='vol2.png' />"
-                    } else {
-                        video.muted = true;
-                        evt.target.innerHTML = "<img alt='volume off button' src='mute2.png' />"
-                    }
-                }, false);
-            } // end of runtime
-        }// end of master         
-    </script>
-    
-    </head>
-    <body onload="init();" >        
-			<video id="Video1" controls style="border: 1px solid blue;" height="540px" width="960px" title="video element"> 
-				<source src="other1.mp4" type="video/mp4">
+	<title>网络教育学院</title>
+</head>
+<style type="text/css">
+	 video::-webkit-media-controls {display:none !important;}
+	 div.video_controls{z-index:2147483647;}
+</style>
+<body>
+	<!--HTML5视频播放器div-->
+	<div style="width:962px; height:542px; position:absolute; background-color:#FFFFFF;">
+		<!--视频界面div-->
+		<div id="video_div" stype="width:962px; height:542px; position:absolute; background-color:#FFFFFF;">
+			对不起，您的浏览器不支持HTML5
+			<video id="video" height="540" width="960" title="" autoplay="autoplay" style="position:absolute; left:0px; top:0px; border:1px solid red;">
+				<source src="videos/other1.mp4" type="video/mp4">
 			</video>
-    
-    <div id="buttonbar" style="display: none;")>
-        <button id="restart" title="Restart button">[]</button> 
-        <button id="slower" title="Slower playback button">-</button> 
-        <button id="rew" title="Rewind button" >&lt;&lt;</button>
-        <button id="play" title="Play button">&gt;</button>
-        <button id="fwd" title="Forward button" >&gt;&gt;</button>
-        <button id="faster" title="Faster playback button">+</button>
-        <button id="Button2" title="Mute button" ><img alt="Volume on button" src="vol2.png" /></button>     
-        <br />
-        <label>Playback </label>
-            <label>Reset playback rate: </label><button id="normal" title="Reset playback rate button">=</button>    
-        
-        <label>  Volume </label>
-            <button id="volDn"  title="Volume down button">-</button>
-            <button id="volUp"  title="Volume up button">+</button>
-            <button id="mute" title="Mute button" ><img alt="Volume on button" src="vol2.png" /></button>        
-    </div>   
-    <br/>  
-    <div id= "inputField" style="display:none;" >
-        <label>Type or paste a video URL: <br/>
-        <input type="text" id="videoFile" style="width: 300px;"  title="video file input field" value="http://ie.microsoft.com/testdrive/ieblog/2011/nov/pp4_blog_demo.mp4" />        
-        <button id="loadVideo" title="Load video button" >Load</button>
-        </label>
-    </div>
-    <div title="Error message area" id="errorMsg" style="color:Red;"></div>  
-    </body>
+		</div>
+		<!--自定义控制条div-->
+		<div class="video_controls" id="video_controls" style="width:960px; height:50px; position:absolute; top:490px; left:0px; background-color:#15171F; opacity:0.5; display:block; z-index=2147483647;">
+			<!--播放div-->
+			<div id="video_play" style="margin:0 auto; width:58px; height:48px; position:absolute; top:0px; left:0px; display:none; border:1px solid white; cursor:pointer; text-align:center;" onClick="videoPlay()">
+				<span style="font-size:48px; color:#FFFFFF; line-height:50px;">></span>
+			</div>
+			<!--暂停div-->
+			<div id="video_pause" style="margin:0 auto; width:58px; height:48px; position:absolute; top:0px; left:0px; display:block; border:1px solid white; cursor:pointer; text-align:center;" onClick="videoPause()">
+				<span style="font-size:35px; color:#FFFFFF; line-height:50px;">||</span>
+			</div>
+			<!--显示当前播放时间、视频总时间div-->
+			<div style="margin:0 auto; width:100px; height:50px; position:absolute; top:0px; left:60px; display:block; text-align:center; color:#999999;">
+				<span id="currentTime" style="font-size:12px; color:#FFFFFF; line-height:50px;">00:00</span>
+				/
+				<span id="durationTime" style="font-size:12px; color:#999999; line-height:50px;">00:00</span>
+			</div>
+			<!--全屏div-->
+			<div id="fullScreenBtn" style="margin:0 auto; width:45px; height:50px; display:block; text-align:center; color:#FFFFFF; float:right; cursor:pointer;" onClick="videoFullScreen()">
+				<span style="font-size:47px; color:#FFFFFF; line-height:50px;">X</span>
+			</div>
+			<!--字幕div-->
+			<div style="margin:0 8px; width:50px; height:50px; text-align:center; float:right; display:block; cursor:pointer;">
+				<div style="margin:14px 0px; padding:0 10px; font-size:12px; color:#cccccc; background-color:#555555; height:22px; line-height:22px; border-radius:4px; outline:none; display:block; cursor:pointer; text-align:center;" onMouseOver="showVideoSubtitle()" onMouseOut="hideVideoSubtitle()">字幕</div>
+				<ul id="video_subtitle_opt" style="width:11px; display:none; bottom:40px; border-radius:4px; background-color:#000000; opacity:0.7; color:#999999; position:relative; top:-96px; left:0px;">
+					<li type="中文" style="width:49px; margin:6px auto; padding:0px; 4px; height:20px; background-color:rgba(34,34,34,0.9); border:1px solid #1b1b1b; border-radius:4px; box-shadow:0 1px 0 0px #666; color:#fff; clear:none; list-style:none; outline:none; display:list-item; position:relative; top:26px; left:-40px; font-size:13px; cursor:pointer;">
+						<span style="color:#84b803; line-height:22px;">•</span>中文
+					</li>
+					<li type="中文" style="width:49px; margin:6px auto; padding:0px; 4px; height:20px; background-color:rgba(34,34,34,0.9); border:1px solid #1b1b1b; border-radius:4px; box-shadow:0 1px 0 0px #666; color:#fff; clear:none; list-style:none; outline:none; display:list-item; position:relative; top:-25px; left:-40px; font-size:13px; cursor:pointer;">
+						<span style="color:#84b803; line-height:22px;">•</span>英文
+					</li>
+				</ul>
+			</div>
+			<!--分辨率div-->
+			<div style="margin:0 8px; width:50px; height:50px; text-align:center; float:right; display:block; cursor:pointer;">
+				<div style="margin:14px 0px; padding:0 10px; font-size:12px; color:#cccccc; background-color:#555555; height:22px; line-height:22px; border-radius:4px; outline:none; display:block; cursor:pointer; text-align:center;" onMouseOver="showVideoResolution()" onMouseOut="hideVideoResolution()">超清</div>
+				<ul id="video_resolution_opt" style="width:11px; display:none; bottom:40px; border-radius:4px; background-color:#000000; opacity:0.7; color:#999999; position:relative; top:-96px; left:0px;">
+					<li type="中文" style="width:49px; margin:6px auto; padding:0px; 4px; height:20px; background-color:rgba(34,34,34,0.9); border:1px solid #1b1b1b; border-radius:4px; box-shadow:0 1px 0 0px #666; color:#fff; clear:none; list-style:none; outline:none; display:list-item; position:relative; top:26px; left:-40px; font-size:13px; cursor:pointer;">
+						<span style="color:#84b803; line-height:22px;">•</span>高清
+					</li>
+					<li type="中文" style="width:49px; margin:6px auto; padding:0px; 4px; height:20px; background-color:rgba(34,34,34,0.9); border:1px solid #1b1b1b; border-radius:4px; box-shadow:0 1px 0 0px #666; color:#fff; clear:none; list-style:none; outline:none; display:list-item; position:relative; top:-25px; left:-40px; font-size:13px; cursor:pointer;">
+						<span style="color:#84b803; line-height:22px;">•</span>标清
+					</li>
+				</ul>
+			</div>
+			<!--播放速度div-->
+			<div style="margin:0 8px; width:60px; height:50px; text-align:center; float:right; display:block; cursor:pointer;">
+				<div style="margin:14px 0px; padding:0 10px; font-size:12px; color:#cccccc; background-color:#555555; height:22px; line-height:22px; border-radius:4px; outline:none; display:block; cursor:pointer; text-align:center;" onMouseOver="showVideoSpeed()" onMouseOut="hideVideoSpeed()">1X</div>
+				<ul id="video_speed_opt" style="width:19px; display:none; bottom:40px; border-radius:4px; background-color:#000000; opacity:0.7; color:#999999; position:relative; top:-96px; left:0px;">
+					<li type="中文" style="width:57px; margin:6px auto; padding:0px; 4px; height:20px; background-color:rgba(34,34,34,0.9); border:1px solid #1b1b1b; border-radius:4px; box-shadow:0 1px 0 0px #666; color:#fff; clear:none; list-style:none; outline:none; display:list-item; position:relative; top:26px; left:-40px; font-size:13px; cursor:pointer;">
+						<span style="color:#84b803; line-height:22px;">•</span>2倍速
+					</li>
+					<li type="中文" style="width:57px; margin:6px auto; padding:0px; 4px; height:20px; background-color:rgba(34,34,34,0.9); border:1px solid #1b1b1b; border-radius:4px; box-shadow:0 1px 0 0px #666; color:#fff; clear:none; list-style:none; outline:none; display:list-item; position:relative; top:-28px; left:-40px; font-size:13px; cursor:pointer;">
+						<span style="color:#84b803; line-height:22px;">•</span>0.5倍速
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		var video=document.getElementById("video");//获取video元素
+		var video_controls=document.getElementById("video_controls");//控制条
+		var video_play=document.getElementById("video_play");//播放
+		var video_pause=document.getElementById("video_pause");//暂停
+		var video_subtitle=document.getElementById("video_subtitle");//字幕
+		/*播放*/
+		var videoPlay=function(){
+			video.play();
+			video_play.style.display="none";
+			video_pause.style.display="block";
+		}
+		/*暂停*/
+		var videoPause=function(){
+			video.pause();
+			video_play.style.display="block";
+			video_pause.style.display="none";
+		}
+		/*显示总时间*/
+		video.onloadedmetadata = function () {
+			var vLength = video.duration;//视频总时间秒数
+			var durationTime_minute=Math.floor(vLength/60);
+			var durationTime_second=Math.ceil(vLength%60);
+			if(durationTime_minute < 10){
+				durationTime_minute = "0"+durationTime_minute;
+			}
+			if(durationTime_second < 10){
+				durationTime_second = "0"+durationTime_second;
+			}
+			var durationTime_str=durationTime_minute+":"+durationTime_second;
+			var durationTime=document.getElementById("durationTime");
+			durationTime.innerHTML=durationTime_str;
+		}
+		/*显示当前时间*/
+		video.ontimeupdate = function () {
+			var vTime = video.currentTime;//视频当前播放时间秒数
+			var currentTime_minute=Math.floor(vTime/60);
+			var currentTime_second=Math.ceil(vTime%60);
+			if(currentTime_minute < 10){
+				currentTime_minute = "0"+currentTime_minute;
+			}
+			if(currentTime_second < 10){
+				currentTime_second = "0"+currentTime_second;
+			}
+			var currentTime_str=currentTime_minute+":"+currentTime_second;
+			var currentTime=document.getElementById("currentTime");
+			currentTime.innerHTML=currentTime_str;
+		};
+		/*全屏*/
+		var videoFullScreen=function(){
+			var video_div=document.getElementById("video_div");
+			video.webkitRequestFullScreen();
+		}
+		/*显示各种字幕的选择项*/
+		var showVideoSubtitle=function(){
+			var video_subtitle_opt=document.getElementById("video_subtitle_opt");
+			video_subtitle_opt.style.display="block";
+		}
+		/*隐藏各种字幕的选择项*/
+		var hideVideoSubtitle=function(){
+			var video_subtitle_opt=document.getElementById("video_subtitle_opt");
+			video_subtitle_opt.style.display="none";
+		}
+		/*显示各种分辨率的选择项*/
+		var showVideoResolution=function(){
+			var video_resolution_opt=document.getElementById("video_resolution_opt");
+			video_resolution_opt.style.display="block";
+		}
+		/*隐藏各种分辨率的选择项*/
+		var hideVideoResolution=function(){
+			var video_resolution_opt=document.getElementById("video_resolution_opt");
+			video_resolution_opt.style.display="none";
+		}
+		/*显示各种播放速度的选择项*/
+		var showVideoSpeed=function(){
+			var video_speed_opt=document.getElementById("video_speed_opt");
+			video_speed_opt.style.display="block";
+		}
+		/*隐藏各种播放速度的选择项*/
+		var hideVideoSpeed=function(){
+			var video_speed_opt=document.getElementById("video_speed_opt");
+			video_speed_opt.style.display="none";
+		}
+	</script>
+</body>
 </html>
