@@ -94,12 +94,12 @@
 				</div>
 			</div>
 			<!--播放时间进度条-->
-			<div style="width:960px; height:6px; position:absolute; top:44px; left:0px; background-color:#555555; display:block;">
+			<div id="total_time_progress" style="width:960px; height:6px; position:absolute; top:44px; left:0px; background-color:#555555; display:block; cursor:pointer;" onClick="mouseChangeProgress()">
 				<!--已经播放时间进度条-->
-				<div style="width:45px; height:6px; position:absolute; top:0; left:0; background-color:#8ec800; display:block;">
+				<div id="play_time_progress" style="width:0px; height:6px; position:absolute; top:0; left:0; background-color:#8ec800; display:block;">
 				</div>
 				<!--当前时间进度坐标点-->
-				<div style="width:8px; height:8px; bottom:-3px; border:2px solid #a2a2a2; border-radius:8px; position:absolute; top:-4px; left:44px; background-color:#ffffff; display:block;">
+				<div id="current_time_progress" style="width:8px; height:8px; bottom:-3px; border:2px solid #a2a2a2; border-radius:8px; position:absolute; top:-4px; left:-3px; background-color:#ffffff; display:block;">
 				</div>
 			</div>
 		</div>
@@ -137,8 +137,9 @@
 			var durationTime=document.getElementById("durationTime");
 			durationTime.innerHTML=durationTime_str;
 		}
-		/*显示当前时间*/
+		/*显示当前时间并使已经播放时间进度条刷新*/
 		video.ontimeupdate = function () {
+			//显示当前时间
 			var vTime = video.currentTime;//视频当前播放时间秒数
 			var currentTime_minute=Math.floor(vTime/60);
 			var currentTime_second=Math.ceil(vTime%60);
@@ -151,6 +152,17 @@
 			var currentTime_str=currentTime_minute+":"+currentTime_second;
 			var currentTime=document.getElementById("currentTime");
 			currentTime.innerHTML=currentTime_str;
+			
+			//刷新已经播放时间进度条
+			var vLength = video.duration;//视频总时间秒数
+			var total_time_progress=document.getElementById("total_time_progress");
+			var play_time_progress=document.getElementById("play_time_progress");
+			var current_time_progress=document.getElementById("current_time_progress");
+			var total_width=total_time_progress.offsetWidth;
+			var progress = vTime/vLength;
+			var play_width = total_width*progress;
+			play_time_progress.style.width = play_width+"px";
+			current_time_progress.style.left = (play_width-3)+"px";
 		};
 		/*全屏*/
 		var videoFullScreen=function(){
@@ -223,6 +235,34 @@
 				video_speed_content.innerHTML="2X";
 				video.playbackRate = 2;
 			}
+		}
+		/*鼠标点击进度条切换进度*/
+		var mouseChangeProgress=function(){
+			var total_time_progress = document.getElementById("total_time_progress");
+			var total_progress_posX = getOffsetLeft(total_time_progress);//进度条在浏览器中的横坐标
+			var total_progress_width = total_time_progress.offsetWidth;//进度条的宽度
+			var mouse_click_posX = event.clientX;//鼠标点击位置在浏览器中的横坐标
+			var play_width = mouse_click_posX - total_progress_posX;
+			//刷新当前播放时间值
+			var progress = play_width/total_progress_width;//视频播放进度，值为百分比
+			var vLength = video.duration;//视频总时间秒数
+			video.currentTime = vLength*progress;
+		}
+		/*获取某个元素在浏览器中的纵坐标*/
+		function getOffsetTop(e){
+			var offsetTop = e.offsetTop;
+			if(e.offsetParent != null){
+				offsetTop += getOffsetTop(e.offsetParent);
+			}
+			return offsetTop;
+		}
+		/*获取某个元素在浏览器中的横坐标*/
+		function getOffsetLeft(e){
+			var offsetLeft = e.offsetLeft;
+			if(e.offsetParent != null){
+				offsetLeft += getOffsetLeft(e.offsetParent);
+			}
+			return offsetLeft;
 		}
 	</script>
 </body>
