@@ -8,11 +8,11 @@
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 	<title>网络教育学院</title>
+	<style type="text/css">
+		 video::-webkit-media-controls {display:none !important;}
+		 div.video_controls{z-index:2147483647;}
+	</style>
 </head>
-<style type="text/css">
-	 video::-webkit-media-controls {display:none !important;}
-	 div.video_controls{z-index:2147483647;}
-</style>
 <body>
 	<!--HTML5视频播放器div-->
 	<div style="width:962px; height:542px; position:absolute; background-color:#FFFFFF;">
@@ -86,11 +86,14 @@
 				</ul>
 			</div>
 			<!--音量按钮及音量长度条-->
-			<div style="margin:0 auto; width:24px; height:48px; cursor:pointer; float:right; line-height:48px;">
+			<div style="margin:0 auto; width:24px; height:48px; cursor:pointer; float:right; line-height:48px;" onMouseOver="showVolumeHeight()" onMouseOut="hideVolumeHeight()" onClick="mouseChangeVolume()">
 				<!--音量按钮-->
 				<div style="font-size:24px; color:#c6c6c7; width:24px; border:1px solid white;">↑</div>
 				<!--音量长度条-->
-				<div>
+				<div id="total_volume_height" style="wdith:24px; height:105px; bottom:40px; line-height:50px; background-color:#333333; display:none; position:relative; top:-150px; left:0px; opacity:0.8;">
+					<!--显示当前音量大小的长度条-->
+					<div id="current_volume_height" style="width:24px; height:50px; background-color:#8ec800; position:relative; left:0px; top:55px;">
+					</div>
 				</div>
 			</div>
 			<!--播放时间进度条-->
@@ -164,16 +167,76 @@
 			play_time_progress.style.width = play_width+"px";
 			current_time_progress.style.left = (play_width-3)+"px";
 		};
-		/*全屏*/
+		/*
+		/*全屏
 		var videoFullScreen=function(){
-			var video_div=document.getElementById("video_div");
+			var video_controls = document.getElementById("video_controls");
+			var total_time_progress = document.getElementById("total_time_progress");
 			if(!document.webkitIsFullScreen){
-				video.webkitRequestFullScreen();
+				//video.webkitRequestFullScreen();//Chorme下可以，IE下不可以
+				//video.requestFullScreen();//Chorme下不可以，IE下不可以
+				//video.requestFullscreen();//Chorme下不可以，IE下不可以
+				//video.webkitEnterFullScreen();//Chorme下可以，IE下不可以
+				video.mozRequestFullScreen();//FF下可以
+				video_controls.style.width = window.screen.width +"px";
+				total_time_progress.style.width = window.screen.width +"px";
 			}
 			else{
-				document.webkitCancelFullScreen();
+				//document.webkitCancelFullScreen();//Chorme下可以，IE下不可以
+				//document.exitFullScreen();//Chorme下不可以，IE下不可以
+				//document.exitFullscreen();//Chorme下不可以，IE下不可以
+				document.mozCancelFullScreen();//FF下可以
+				video_controls.style.width = video.width +"px";
+				total_time_progress.style.width = video.width +"px";
 			}
-		}
+			console.log(video.width);
+		}*/
+		var videoFullScreen = function(){ 
+			//var navigatorName = "Microsoft Internet Explorer"; 
+
+			var video = document.getElementById("video");
+			var video_controls = document.getElementById("video_controls");
+			var total_time_progress = document.getElementById("total_time_progress");
+			if (video.msRequestFullscreen)//IE 
+			{
+				video.msRequestFullscreen();
+				//alert("IE");
+			}
+			else if(video.webkitRequestFullScreen)//Chorme
+			{
+				if(!document.webkitIsFullScreen){
+					video.webkitRequestFullScreen();
+					video_controls.style.width = window.screen.width +"px";
+					total_time_progress.style.width = window.screen.width +"px";
+				}else{
+					document.webkitCancelFullScreen();
+					video_controls.style.width = video.width +"px";
+					total_time_progress.style.width = video.width +"px";
+				}
+			}
+			else if(video.mozRequestFullScreen)//FF
+			{
+				alert("ff");
+				if(!document.mozFullScreen;){
+					video.mozRequestFullScreen();
+				}else{
+					document.mozCancelFullScreen();
+				}
+			}
+			/*
+			else if(video.requestFullscreen)
+			{  
+				video.requestFullscreen();
+				//alert("未知浏览器1");
+			}
+			else if(navigator.appName == navigatorName )
+			{    
+				var WsShell = new ActiveXObject('WScript.Shell') 
+				WsShell.SendKeys('{F11}'); 
+				//alert("未知浏览器2");
+			}
+			*/
+		} 
 		/*显示各种字幕的选择项*/
 		var showVideoSubtitle=function(){
 			var video_subtitle_opt=document.getElementById("video_subtitle_opt");
@@ -221,6 +284,8 @@
 				video.src="videos/other3.mp4";
 				video.currentTime=vTime;
 			}
+			video_play.style.display="none";
+			video_pause.style.display="block";
 		}
 		/*切换视频播放速度*/
 		var changeSpeed=function(id){
@@ -263,6 +328,28 @@
 				offsetLeft += getOffsetLeft(e.offsetParent);
 			}
 			return offsetLeft;
+		}
+		/*显示音量调节音量条*/
+		function showVolumeHeight(){
+			var total_volume_height = document.getElementById("total_volume_height");
+			total_volume_height.style.display = "block";
+		}
+		/*隐藏音量调节音量条*/
+		function hideVolumeHeight(){
+			var total_volume_height = document.getElementById("total_volume_height");
+			total_volume_height.style.display = "none";
+		}
+		/*鼠标点击音量条调节音量*/
+		function mouseChangeVolume(){
+			var total_volume_height = document.getElementById("total_volume_height");
+			var current_volume_height = document.getElementById("current_volume_height");
+			var total_volume_top = getOffsetTop(total_volume_height);
+			var current_volume_top = getOffsetTop(current_volume_height);
+			var mouse_click_posY = event.clientY;//鼠标点击位置在浏览器中的纵坐标
+			current_volume_height.style.height = total_volume_height.offsetHeight - (mouse_click_posY - total_volume_top) + "px";
+			current_volume_height.style.top = (mouse_click_posY - total_volume_top) + "px";
+			var volume_percent = current_volume_height.offsetHeight/total_volume_height.offsetHeight;
+			video.volume = volume_percent.toFixed(3);//设置音量
 		}
 	</script>
 </body>
